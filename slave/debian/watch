@@ -1,4 +1,0 @@
-version=3
-opts=downloadurlmangle=s/.*\/\//http:\/\// \
-    http://code.google.com/p/buildbot/downloads/list \
-    .*\/buildbot-slave-([0-9.p]*)\.tar\.gz

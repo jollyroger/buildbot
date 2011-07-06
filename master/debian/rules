@@ -2,7 +2,19 @@
 
 DESTDIR = debian/buildbot
 DOCDIR = /usr/share/doc/buildbot
-export VERSION = $(shell head -n1 debian/changelog | cut -d' ' -f2 | tr -d '()')
+
+export VERSION = $(shell python -c 'from buildbot import version ; print version')
+DATE = $(shell date -R)
+
+# Set full name and email for a package maintainer if not explicitly available
+# from environment variables
+ifndef DEBFULLNAME
+	DEBFULLNAME = "Dustin J. Mitchell"
+endif
+
+ifndef DEBEMAIL
+	DEBEMAIL = "dustin@v.igoro.us"
+endif
 
 %:
 	dh $@ --with python2
@@ -10,13 +22,20 @@ export VERSION = $(shell head -n1 debian/changelog | cut -d' ' -f2 | tr -d '()')
 make_docs:
 	$(MAKE) -C docs buildbot.info buildbot.html
 
+generate_changelog:
+	sed -e "s/VERSION/${VERSION}/" \
+		-e "s/DEBFULLNAME/${DEBFULLNAME}/" \
+		-e "s/DEBEMAIL/${DEBEMAIL}/" \
+		-e "s/DATE/${DATE}/" \
+		debian/changelog.template > debian/changelog
+
 override_dh_auto_build: make_docs
-	dh_auto_build
+	dh_auto_build --buildsystem=python_distutils
 
 override_dh_auto_clean:
 	rm -fR buildbot.egg-info _trial_temp
 	rm -f docs/buildbot.info* docs/buildbot.html
-	dh_auto_clean
+	dh_auto_clean --buildsystem=python_distutils
 
 override_dh_auto_test:
 ifneq (,$(findstring nocheck, $(DEB_BUILD_OPTIONS)))

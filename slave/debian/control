@@ -1,8 +1,7 @@
 Source: buildbot-slave
 Section: devel
 Priority: optional
-Maintainer: Matthias Klose <doko@debian.org>
-Uploaders: Andriy Senkovych <jolly_roger@itblog.org.ua>
+Maintainer: Dustin J. Mitchell <dustin@v.igoro.us>
 Build-Depends: debhelper (>= 7.0.50~), python-all (>= 2.6.6-3)
 Homepage: http://buildbot.net
 Standards-Version: 3.9.2

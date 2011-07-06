@@ -38,3 +38,18 @@ apidocs/reference
 apidocs/reference.tgz
 common/googlecode_upload.py
 master/docs/tutorial/_build
+
+# FIles related to Debian build process
+*.deb
+*.tar.gz
+*.changes
+*.dsc
+master/debian/buildbot
+master/.pc
+slave/debian/buildbot-slave
+slave/.pc
+*/debian/changelog
+*/debian/files
+*/debian/*.substvars
+*/debian/*debhelper*
+*/debian/tmp
