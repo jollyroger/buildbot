@@ -1,0 +1,18 @@
+Description: Fix *_PREFIXCMD usage in init script
+ This patch fixes Debian bug #627918.
+Author: Andreas Beckmann <debian@abeckmann.de>
+Forwarded: https://github.com/buildbot/buildbot/pull/172
+Applied-Upstream: https://github.com/buildbot/buildbot/commit/58c4d57584
+Last-Update: 2011-06-29
+
+--- a/contrib/init-scripts/buildmaster.init.sh
++++ b/contrib/init-scripts/buildmaster.init.sh
+@@ -112,7 +112,7 @@
+ function master_op () {
+     op=$1 ; mi=$2
+ 
+-    ${MASTER_PREFIXCMD[$1]} \
++    ${MASTER_PREFIXCMD[$mi]} \
+     su -s /bin/sh \
+     -c "$MASTER_RUNNER $op --quiet ${MASTER_OPTIONS[$mi]} ${MASTER_BASEDIR[$mi]}" \
+     - ${MASTER_USER[$mi]}

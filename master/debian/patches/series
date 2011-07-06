@@ -1,0 +1,4 @@
+buildmaster-use-MASTER_PREFIXCMD.patch
+fix-interpreters.patch
+fix-init-scripts.patch
+fix-makeinfo-args.patch
