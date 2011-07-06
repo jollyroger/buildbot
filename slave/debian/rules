@@ -17,17 +17,16 @@ endif
 %:
 	dh $@ --with python2
 
-generate_changelog:
+override_dh_auto_build:
+	dh_auto_build --buildsystem=python_distutils
+
+override_dh_auto_clean:
+	git clean -fdx .
 	sed -e "s/VERSION/${VERSION}/" \
 		-e "s/DEBFULLNAME/${DEBFULLNAME}/" \
 		-e "s/DEBEMAIL/${DEBEMAIL}/" \
 		-e "s/DATE/${DATE}/" \
 		debian/changelog.template > debian/changelog
-
-override_dh_auto_build: generate_changelog
-	dh_auto_build --buildsystem=python_distutils
-
-override_dh_auto_clean: generate_changelog
 	rm -fR buildbot_slave.egg-info
 	dh_auto_clean --buildsystem=python_distutils
 

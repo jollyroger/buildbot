@@ -22,17 +22,16 @@ endif
 make_docs:
 	$(MAKE) -C docs buildbot.info buildbot.html
 
-generate_changelog:
+override_dh_auto_build: make_docs
+	dh_auto_build --buildsystem=python_distutils
+
+override_dh_auto_clean:
+	git clean -fdx .
 	sed -e "s/VERSION/${VERSION}/" \
 		-e "s/DEBFULLNAME/${DEBFULLNAME}/" \
 		-e "s/DEBEMAIL/${DEBEMAIL}/" \
 		-e "s/DATE/${DATE}/" \
 		debian/changelog.template > debian/changelog
-
-override_dh_auto_build: make_docs
-	dh_auto_build --buildsystem=python_distutils
-
-override_dh_auto_clean:
 	rm -fR buildbot.egg-info _trial_temp
 	rm -f docs/buildbot.info* docs/buildbot.html
 	dh_auto_clean --buildsystem=python_distutils
