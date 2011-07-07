@@ -8,13 +8,8 @@ DATE = $(shell date -R)
 
 # Set full name and email for a package maintainer if not explicitly available
 # from environment variables
-ifndef DEBFULLNAME
-	DEBFULLNAME = "Dustin J. Mitchell"
-endif
-
-ifndef DEBEMAIL
-	DEBEMAIL = "dustin@v.igoro.us"
-endif
+DEBFULLNAME ?= "Dustin J. Mitchell"
+DEBEMAIL ?= "dustin@v.igoro.us"
 
 %:
 	dh $@ --with python2
