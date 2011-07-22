@@ -15,7 +15,7 @@
 # Portions Copyright Buildbot Team Members
 # Portions Copyright Canonical Ltd. 2009
 
-
+# Global includes
 !include 'Sections.nsh'
 !include 'WordFunc.nsh'
 
@@ -28,12 +28,23 @@
 !include ${VERSION_HEADER}
 
 # Prepare files to be added to the installer
-# FIXME: hardcoded paths for Python 2.7 and 7-Zip
-!define PYTHON_VERSION "27"
-!define SEVENZIP_PATH "C:\Program Files\7-Zip\7z.exe"
 !system "python.exe setup.py bdist --format=zip"
-!system '"${SEVENZIP_PATH}" x -y -obuild dist\buildbot-${BUILDBOT_VERSION}.win32.zip'
-!cd "build\Python${PYTHON_VERSION}"
+!system "python -m zipfile -e dist\buildbot-${BUILDBOT_VERSION}.win32.zip build"
+
+# bdist command creates a zipfile. This file has a root directory called
+# 'Python*' which corresponds to the version of the Python interpreter used.
+# bdist also includes pre-compiled *.pyc files which are not needed and
+# buildbot-*.egg-info which contains an interpreter's version in its name.
+# We'll recreate it with original PKG-INFO file to remove possible confusion.
+!define PYTHON_INSTDIR "instdir.nsi"
+!delfile ${PYTHON_INSTDIR}
+!appendfile ${PYTHON_INSTDIR} "!define BUILD_PATH build\"
+!cd "build"
+!system "dir /A:D /B Python* >> ..\${PYTHON_INSTDIR}"
+!cd ".."
+!include ${PYTHON_INSTDIR}
+!cd "${BUILD_PATH}"
+
 !system "del /S *.pyc *.egg-info"
 !system "copy ..\..\PKG-INFO Lib\site-packages\buildbot-${BUILDBOT_VERSION}.egg-info"
 
