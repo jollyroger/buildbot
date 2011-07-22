@@ -15,13 +15,12 @@
 # Portions Copyright Buildbot Team Members
 # Portions Copyright Canonical Ltd. 2009
 
-# Global includes
-!include 'Sections.nsh'
-!include 'WordFunc.nsh'
-
+# -----------------------------------------------------------------------------
+# Compile-time preparations
+# -----------------------------------------------------------------------------
 # Get installer know the buildbot version currently built. Buildbot version 
 # will be available as !define BUILDBOT_VERSION
-!define VERSION_HEADER "version.nsi"
+!define VERSION_HEADER "build\version.nsi"
 !delfile ${VERSION_HEADER}
 !appendfile ${VERSION_HEADER} "!define BUILDBOT_VERSION "
 !system "type buildbot\VERSION >> ${VERSION_HEADER}"
@@ -36,7 +35,7 @@
 # bdist also includes pre-compiled *.pyc files which are not needed and
 # buildbot-*.egg-info which contains an interpreter's version in its name.
 # We'll recreate it with original PKG-INFO file to remove possible confusion.
-!define PYTHON_INSTDIR "instdir.nsi"
+!define PYTHON_INSTDIR "build\instdir.nsi"
 !delfile ${PYTHON_INSTDIR}
 !appendfile ${PYTHON_INSTDIR} "!define BUILD_PATH build\"
 !cd "build"
@@ -48,17 +47,29 @@
 !system "del /S *.pyc *.egg-info"
 !system "copy ..\..\PKG-INFO Lib\site-packages\buildbot-${BUILDBOT_VERSION}.egg-info"
 
+# -----------------------------------------------------------------------------
+# Global includes
+# -----------------------------------------------------------------------------
+!include 'Sections.nsh'
+!include 'WordFunc.nsh'
+
+# -----------------------------------------------------------------------------
+# Installer attributes
+# -----------------------------------------------------------------------------
+# NOTE: we're currently inside build/Python* directory
 OutFile "..\..\dist\buildbot-${BUILDBOT_VERSION}.exe"
 Name "Buildbot Master"
+Icon "Lib\site-packages\buildbot\status\web\files\favicon.ico"
+XPStyle on
 LicenseData "..\..\COPYING"
 ComponentText "Check all Python installations you want to install Buildbot to \
 and uncheck those you don't want. You can use custom Python installation \
 option and specify your target Python installation later. Click Next to continue."
-
 DirText "Please specify path to your Python installation. This may be a regular \
 Python installation or environment, created with virtualenv. However several \
 checks will be done to be sure all dependencies are installed. If any of them \
 are missing you will be asked to download and install them manually."
+
 
 Page components enableComponents
 Page directory checkCustomPython
@@ -80,6 +91,7 @@ Section /o "-Python ${version}" ${id}
     ReadRegStr $PYTHON_INSTALL_PATH HKCU "${PYTHON_REG_PATH}\${version}\InstallPath" ""
     SetOutPath "$PYTHON_INSTALL_PATH"
     File /r *.*
+    WriteUninstaller $OUTDIR\Scripts\buildbot_uninstall.exe
 SectionEnd
 !macroend
 
@@ -108,6 +120,12 @@ SectionEnd
 Section /o "Custom Python installation" sectionCustom
     SetOutPath $INSTDIR
      File /r *.*
+    WriteUninstaller $OUTDIR\Scripts\buildbot_uninstall.exe
+SectionEnd
+
+# Uninstaller section
+Section Uninstall
+    Nop
 SectionEnd
 
 # Macro to enable Python install sections found in registry. Again, due to
@@ -259,3 +277,5 @@ Function .onVerifyInstDir
     IfFileExists "$INSTDIR\Scripts\python.exe" +2
     Abort
 FunctionEnd
+
+
