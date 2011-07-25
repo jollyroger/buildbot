@@ -96,26 +96,10 @@ SectionEnd
 !macroend
 
 # Create sctions for each supported Python version
-!insertmacro PythonSection "2.0" section20
-!insertmacro PythonSection "2.1" section21
-!insertmacro PythonSection "2.2" section22
-!insertmacro PythonSection "2.3" section23
 !insertmacro PythonSection "2.4" section24
 !insertmacro PythonSection "2.5" section25
 !insertmacro PythonSection "2.6" section26
 !insertmacro PythonSection "2.7" section27
-!insertmacro PythonSection "2.8" section28
-!insertmacro PythonSection "2.9" section29
-!insertmacro PythonSection "3.0" section30
-!insertmacro PythonSection "3.1" section31
-!insertmacro PythonSection "3.2" section32
-!insertmacro PythonSection "3.3" section33
-!insertmacro PythonSection "3.4" section34
-!insertmacro PythonSection "3.5" section35
-!insertmacro PythonSection "3.6" section36
-!insertmacro PythonSection "3.7" section37
-!insertmacro PythonSection "3.8" section38
-!insertmacro PythonSection "3.9" section39
 
 Section /o "Custom Python installation" sectionCustom
     SetOutPath $INSTDIR
@@ -134,85 +118,21 @@ SectionEnd
 # from native Python installer, but should use only supported by Buildbot
 # versions.
 !macro EnablePythonSection version
-    StrCmp ${version} "2.0" 0 +4
-    SectionSetFlags ${section20} ${SF_SELECTED}
-    SectionSetText  ${section20} "Python $PYTHON_VERSION"
-    goto +76
-    StrCmp ${version} "2.1" 0 +4
-    SectionSetFlags ${section21} ${SF_SELECTED}
-    SectionSetText  ${section21} "Python $PYTHON_VERSION"
-    goto +72
-    StrCmp ${version} "2.2" 0 +4
-    SectionSetFlags ${section22} ${SF_SELECTED}
-    SectionSetText  ${section22} "Python $PYTHON_VERSION"
-    goto +68
-    StrCmp ${version} "2.3" 0 +4
-    SectionSetFlags ${section23} ${SF_SELECTED}
-    SectionSetText  ${section23} "Python $PYTHON_VERSION"
-    goto +64
     StrCmp ${version} "2.4" 0 +4
     SectionSetFlags ${section24} ${SF_SELECTED}
     SectionSetText  ${section24} "Python $PYTHON_VERSION"
-    goto +60
+    goto +12
     StrCmp ${version} "2.5" 0 +4
     SectionSetFlags ${section25} ${SF_SELECTED}
     SectionSetText  ${section25} "Python $PYTHON_VERSION"
-    goto +56
+    goto +8
     StrCmp ${version} "2.6" 0 +4
     SectionSetFlags ${section26} ${SF_SELECTED}
     SectionSetText  ${section26} "Python $PYTHON_VERSION"
-    goto +52
+    goto +4
     StrCmp ${version} "2.7" 0 +4
     SectionSetFlags ${section27} ${SF_SELECTED}
     SectionSetText  ${section27} "Python $PYTHON_VERSION"
-    goto +48
-    StrCmp ${version} "2.8" 0 +4
-    SectionSetFlags ${section28} ${SF_SELECTED}
-    SectionSetText  ${section28} "Python $PYTHON_VERSION"
-    goto +44
-    StrCmp ${version} "2.9" 0 +4
-    SectionSetFlags ${section29} ${SF_SELECTED}
-    SectionSetText  ${section29} "Python $PYTHON_VERSION"
-    goto +40
-    StrCmp ${version} "3.0" 0 +4
-    SectionSetFlags ${section30} ${SF_SELECTED}
-    SectionSetText  ${section30} "Python $PYTHON_VERSION"
-    goto +36
-    StrCmp ${version} "3.1" 0 +4
-    SectionSetFlags ${section31} ${SF_SELECTED}
-    SectionSetText  ${section31} "Python $PYTHON_VERSION"
-    goto +32
-    StrCmp ${version} "3.2" 0 +4
-    SectionSetFlags ${section32} ${SF_SELECTED}
-    SectionSetText  ${section32} "Python $PYTHON_VERSION"
-    goto +28
-    StrCmp ${version} "3.3" 0 +4
-    SectionSetFlags ${section33} ${SF_SELECTED}
-    SectionSetText  ${section33} "Python $PYTHON_VERSION"
-    goto +24
-    StrCmp ${version} "3.4" 0 +4
-    SectionSetFlags ${section34} ${SF_SELECTED}
-    SectionSetText  ${section34} "Python $PYTHON_VERSION"
-    goto +20
-    StrCmp ${version} "3.5" 0 +4
-    SectionSetFlags ${section35} ${SF_SELECTED}
-    SectionSetText  ${section35} "Python $PYTHON_VERSION"
-    goto +16
-    StrCmp ${version} "3.6" 0 +4
-    SectionSetFlags ${section36} ${SF_SELECTED}
-    SectionSetText  ${section36} "Python $PYTHON_VERSION"
-    goto +12
-    StrCmp ${version} "3.7" 0 +4
-    SectionSetFlags ${section37} ${SF_SELECTED}
-    SectionSetText  ${section37} "Python $PYTHON_VERSION"
-    goto +8
-    StrCmp ${version} "3.8" 0 +4
-    SectionSetFlags ${section38} ${SF_SELECTED}
-    SectionSetText  ${section38} "Python $PYTHON_VERSION"
-    goto +4
-    StrCmp ${version} "3.9" 0 +4
-    SectionSetFlags ${section39} ${SF_SELECTED}
-    SectionSetText  ${section39} "Python $PYTHON_VERSION"
 !macroend 
 
 # This function will fill PYTHON_VERSIONS and PYTHON_INSTALL_PATHS with python
