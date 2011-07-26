@@ -18,34 +18,40 @@
 # -----------------------------------------------------------------------------
 # Compile-time preparations
 # -----------------------------------------------------------------------------
+# Prepare build directory(remove and recreate again)
+!define BUILD_PREFIX "build\nsis.win32"
+!system "deltree /Y ${BUILD_PREFIX}"
+!system "mkdir ${BUILD_PREFIX}"
+
 # Get installer know the buildbot version currently built. Buildbot version 
-# will be available as !define BUILDBOT_VERSION
-!define VERSION_HEADER "build\version.nsi"
-!delfile ${VERSION_HEADER}
-!appendfile ${VERSION_HEADER} "!define BUILDBOT_VERSION "
-!system "type buildbot\VERSION >> ${VERSION_HEADER}"
-!include ${VERSION_HEADER}
+# will be available as !define BUILDBOT_VERSION. The source dir will be
+# available as PROJECT_DIR
+!define PROJECT_HEADER "${BUILD_PREFIX}\buildbot.nsi"
+!appendfile ${PROJECT_HEADER} "!define PROJECT_DIR "
+!system "cd >> ${PROJECT_HEADER}"
+!appendfile ${PROJECT_HEADER} "!define BUILDBOT_VERSION "
+!system "type buildbot\VERSION >> ${PROJECT_HEADER}"
+!include ${PROJECT_HEADER}
 
 # Prepare files to be added to the installer
 !system "python.exe setup.py bdist --format=zip"
-!system "python -m zipfile -e dist\buildbot-${BUILDBOT_VERSION}.win32.zip build"
+!system "python -m zipfile -e dist\buildbot-${BUILDBOT_VERSION}.win32.zip ${BUILD_PREFIX}"
 
 # bdist command creates a zipfile. This file has a root directory called
 # 'Python*' which corresponds to the version of the Python interpreter used.
 # bdist also includes pre-compiled *.pyc files which are not needed and
 # buildbot-*.egg-info which contains an interpreter's version in its name.
 # We'll recreate it with original PKG-INFO file to remove possible confusion.
-!define PYTHON_INSTDIR "build\instdir.nsi"
-!delfile ${PYTHON_INSTDIR}
-!appendfile ${PYTHON_INSTDIR} "!define BUILD_PATH build\"
-!cd "build"
-!system "dir /A:D /B Python* >> ..\${PYTHON_INSTDIR}"
-!cd ".."
-!include ${PYTHON_INSTDIR}
+!define INSTDIR_HEADER "${BUILD_PREFIX}\instdir.nsi"
+!appendfile ${INSTDIR_HEADER} "!define BUILD_PATH ${BUILD_PREFIX}\"
+!cd "${BUILD_PREFIX}"
+!system "dir /A:D /B Python* >> instdir.nsi"
+!cd "${PROJECT_DIR}"
+!include ${INSTDIR_HEADER}
 !cd "${BUILD_PATH}"
 
 !system "del /S *.pyc *.egg-info"
-!system "copy ..\..\PKG-INFO Lib\site-packages\buildbot-${BUILDBOT_VERSION}.egg-info"
+!system "copy ${PROJECT_DIR}\PKG-INFO Lib\site-packages\buildbot-${BUILDBOT_VERSION}.egg-info"
 
 # -----------------------------------------------------------------------------
 # Global includes
@@ -56,12 +62,12 @@
 # -----------------------------------------------------------------------------
 # Installer attributes
 # -----------------------------------------------------------------------------
-# NOTE: we're currently inside build/Python* directory
-OutFile "..\..\dist\buildbot-${BUILDBOT_VERSION}.exe"
+# NOTE: we're currently inside build\nsis.win32\Python* directory
+OutFile "${PROJECT_DIR}\dist\buildbot-${BUILDBOT_VERSION}.exe"
 Name "Buildbot Master"
 Icon "Lib\site-packages\buildbot\status\web\files\favicon.ico"
 XPStyle on
-LicenseData "..\..\COPYING"
+LicenseData "${PROJECT_DIR}\COPYING"
 ComponentText "Check all Python installations you want to install Buildbot to \
 and uncheck those you don't want. You can use custom Python installation \
 option and specify your target Python installation later. Click Next to continue."
