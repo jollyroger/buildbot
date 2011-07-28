@@ -20,7 +20,7 @@
 # -----------------------------------------------------------------------------
 # Prepare build directory(remove and recreate again)
 !define BUILD_PREFIX "build\nsis.win32"
-!system "deltree /Y ${BUILD_PREFIX}"
+!system "rmdir /S /Q ${BUILD_PREFIX}"
 !system "mkdir ${BUILD_PREFIX}"
 
 # Get installer know the buildbot version currently built. Buildbot version 
