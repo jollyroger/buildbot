@@ -30,7 +30,7 @@
 !appendfile ${PROJECT_HEADER} "!define PROJECT_DIR "
 !system "cd >> ${PROJECT_HEADER}"
 !appendfile ${PROJECT_HEADER} "!define BUILDBOT_VERSION "
-!system "type buildbot\VERSION >> ${PROJECT_HEADER}"
+!system 'python -c "from buildbot import version ; print version" >> ${PROJECT_HEADER}'
 !include ${PROJECT_HEADER}
 
 # Prepare files to be added to the installer
