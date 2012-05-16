@@ -22,6 +22,10 @@ MASTER_RUNNER=/usr/bin/buildbot
 #[[ -r /etc/sysconfig/buildmaster ]] && . /etc/sysconfig/buildmaster
 
 # Or define/override the configuration here
+# NOTE: MASTER_ENABLED has changed its behaviour in version 0.8.4. Use
+# 'true|yes|1' to enable instance and 'false|no|0' to disable. Other
+# values will be considered as syntax error.
+#
 #MASTER_ENABLED[1]=0                    # 1-enabled, 0-disabled
 #MASTER_NAME[1]="buildmaster #1"        # short name printed on start/stop
 #MASTER_USER[1]="buildbot"              # user to run master as

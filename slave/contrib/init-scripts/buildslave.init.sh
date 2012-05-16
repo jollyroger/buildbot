@@ -22,6 +22,10 @@ SLAVE_RUNNER=/usr/bin/buildslave
 #[[ -r /etc/sysconfig/buildslave ]] && . /etc/sysconfig/buildslave
 
 # Or define/override the configuration here
+# NOTE: SLAVE_ENABLED has changed its behaviour in version 0.8.4. Use
+# 'true|yes|1' to enable instance and 'false|no|0' to disable. Other
+# values will be considered as syntax error.
+#
 #SLAVE_ENABLED[1]=0                    # 0-enabled, other-disabled
 #SLAVE_NAME[1]="buildslave #1"         # short name printed on start/stop
 #SLAVE_USER[1]="buildbot"              # user to run slave as
